@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Talks Today</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        h1 {
+            color: #0056b3;
+        }
+        .search-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        #search-input {
+            padding: 10px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #schedule {
+            margin-top: 20px;
+        }
+        .talk, .break {
+            background: #fff;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba[0,0,0,0.1];
+            display: flex;
+        }
+        .time {
+            width: 150px;
+            flex-shrink: 0;
+            font-weight: bold;
+            color: #0056b3;
+        }
+        .details {
+            flex-grow: 1;
+        }
+        .talk h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .speakers {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .category {
+            margin-top: 10px;
+        }
+        .category span {
+            background-color: #eef;
+            color: #0056b3;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.9em;
+            margin-right: 5px;
+        }
+        .break {
+            background-color: #e9f5e9;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #0b6623;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Tech Talks Today</h1>
+            <p>A 1-day event filled with technical talks.</p>
+        </header>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search by category...">
+        </div>
+        <div id="schedule"></div>
+    </div>
+    <script>
+        const talks = [
+            {
+                title: "The Future of Frontend: A Deep Dive into WebAssembly",
+                speakers: ["Alex Chen"],
+                category: ["Frontend", "WebAssembly", "Performance"],
+                description: "Explore the next frontier of web development with WebAssembly. This talk will cover the basics of Wasm, its integration with JavaScript, and how it's being used to build high-performance web applications.",
+                startTime: "10:00 AM",
+                endTime: "11:00 AM"
+            },
+            {
+                title: "Building Scalable APIs with GraphQL",
+                speakers: ["Maria Garcia", "David Rodriguez"],
+                category: ["Backend", "API", "GraphQL"],
+                description: "Learn how to design and build flexible and efficient APIs with GraphQL. We'll cover the core concepts, compare it with REST, and demonstrate how to build a GraphQL server with Node.js.",
+                startTime: "11:10 AM",
+                endTime: "12:10 PM"
+            },
+            {
+                title: "The Art of Debugging: A Practical Guide",
+                speakers: ["John Smith"],
+                category: ["Debugging", "Developer Tools"],
+                description: "This session will equip you with practical debugging techniques and tools to efficiently identify and resolve issues in your code. From browser developer tools to advanced debugging strategies, you'll learn how to become a more effective troubleshooter.",
+                startTime: "12:20 PM",
+                endTime: "1:20 PM"
+            },
+            {
+                title: "Securing Your Web Applications: Best Practices",
+                speakers: ["Emily White"],
+                category: ["Security", "Web Development"],
+                description: "In this talk, we'll cover the most common web security vulnerabilities and discuss best practices to protect your applications from attacks. Learn how to implement security measures against threats like XSS, CSRF, and SQL injection.",
+                startTime: "2:30 PM",
+                endTime: "3:30 PM"
+            },
+            {
+                title: "Introduction to Machine Learning with TensorFlow.js",
+                speakers: ["Chris Lee", "Priya Sharma"],
+                category: ["Machine Learning", "JavaScript", "TensorFlow"],
+                description: "Discover how to bring machine learning to the browser with TensorFlow.js. This talk will introduce the fundamentals of ML and guide you through building and training your first model directly in the browser.",
+                startTime: "3:40 PM",
+                endTime: "4:40 PM"
+            },
+            {
+                title: "DevOps for Frontend Developers",
+                speakers: ["Michael Brown"],
+                category: ["DevOps", "Frontend", "CI/CD"],
+                description: "Learn how to streamline your development workflow with DevOps practices tailored for frontend development. We'll cover continuous integration, continuous deployment (CI/CD), and how to automate your build and deployment pipelines.",
+                startTime: "4:50 PM",
+                endTime: "5:50 PM"
+            }
+        ];
+
+        const scheduleContainer = document.getElementById('schedule');
+        const searchInput = document.getElementById('search-input');
+
+        function renderSchedule(filteredTalks) {
+            scheduleContainer.innerHTML = '';
+            let talkIndex = 0;
+            const talksToRender = filteredTalks || talks;
+
+            const renderTalk = (talk) => {
+                 const talkElement = document.createElement('div');
+                talkElement.className = 'talk';
+                talkElement.innerHTML = `
+                    <div class="time">${talk.startTime} - ${talk.endTime}</div>
+                    <div class="details">
+                        <h2>${talk.title}</h2>
+                        <div class="speakers">${talk.speakers.join(', ')}</div>
+                        <p>${talk.description}</p>
+                        <div class="category">
+                            ${talk.category.map(cat => `<span>${cat}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                scheduleContainer.appendChild(talkElement);
+            };
+
+            const renderBreak = (startTime, endTime, text) => {
+                const breakElement = document.createElement('div');
+                breakElement.className = 'break';
+                breakElement.innerHTML = `
+                    <div class="time">${startTime} - ${endTime}</div>
+                    <div class="details">${text}</div>
+                `;
+                 scheduleContainer.appendChild(breakElement);
+            }
+
+            if(talksToRender.length === 0){
+                 scheduleContainer.innerHTML = '<p style="text-align:center;">No talks found for this category.</p>';
+                 return;
+            }
+
+            // This logic is a bit brittle, a better approach would be to have a single schedule array
+            // with talks and breaks in order. For this simple case, we interleave them.
+            if (!filteredTalks) {
+                renderTalk(talks[0]);
+                renderTalk(talks[1]);
+                renderTalk(talks[2]);
+                renderBreak("1:20 PM", "2:20 PM", "Lunch Break");
+                renderTalk(talks[3]);
+                renderTalk(talks[4]);
+                renderTalk(talks[5]);
+            } else {
+                 talksToRender.forEach(renderTalk);
+            }
+        }
+
+        searchInput.addEventListener('keyup', (e) => {
+            const query = e.target.value.toLowerCase();
+            if (query === "") {
+                renderSchedule();
+                return;
+            }
+            const filteredTalks = talks.filter(talk => {
+                return talk.category.some(cat => cat.toLowerCase().includes(query));
+            });
+            renderSchedule(filteredTalks);
+        });
+
+        // Initial render
+        renderSchedule();
+    </script>
+</body>
+</html>
